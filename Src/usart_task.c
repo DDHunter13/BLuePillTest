@@ -8,7 +8,14 @@
 
 #include "usart_task.h"
 
+/** @brief THe function to check new data from uart receiver. It process it to indicate a request to voltage measurement.
+ *
+ */
 static void Usart_Receive();
+
+/** @brief The function to check new available data for transmitting.
+ *
+ */
 static void Usart_Transmit();
 
 static void Usart_Transmit()
