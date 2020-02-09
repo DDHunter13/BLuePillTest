@@ -15,6 +15,9 @@
 extern uint8_t usart_tx_request;
 extern float temperature_tx;
 
+/** @brief The function to RTOS task. It controls counter to do periodic temperature measurements.
+ *
+ */
 void Temperature_Task();
 
 #endif /* TEMPERATURE_TASK_H_ */
