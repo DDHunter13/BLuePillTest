@@ -17,7 +17,9 @@ extern uint8_t adc_request;
 extern uint8_t usart_tx_request;
 extern float adc_tx;
 
-
+/** @brief The function of Adc_Task. It controls ADC measurements by timer and checking request.
+ *
+ */
 void Adc_Task();
 
 #endif /* ADC_TASK_H_ */
