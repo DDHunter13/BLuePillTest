@@ -21,6 +21,9 @@ extern uint8_t usart_tx_request;
 extern float temperature_tx;
 extern float adc_tx;
 
+/** @brief THe funtion to Usart_task. It controls uart Rx and Tx and operate with flags with adc and temperature tasks.
+ *
+ */
 void Usart_Task();
 
 #endif /* USART_TASK_H_ */
