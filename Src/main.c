@@ -48,22 +48,22 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-ADC_HandleTypeDef hadc1;
-ADC_HandleTypeDef hadc2;
+ADC_HandleTypeDef hadc1; 			//!< Variable to setting and using adc1.
+ADC_HandleTypeDef hadc2; 			//!< Variable to setting and using adc2.
 
-USART_HandleTypeDef husart1;
+USART_HandleTypeDef husart1; 		//!< Variable to setting and using usart.
 
-WWDG_HandleTypeDef hwwdg;
+WWDG_HandleTypeDef hwwdg; 			//!< Variable to setting watchdog timer.
 
-osThreadId defaultTaskHandle;
+osThreadId defaultTaskHandle; 		//!< Variable to control default task (indicates work).
 /* USER CODE BEGIN PV */
-osThreadId adcTaskHandle;
-osThreadId temperatureTaskHandle;
-osThreadId usartTaskHandle;
-uint8_t adc_request;
-uint8_t usart_tx_request;
-float temperature_tx;
-float adc_tx;
+osThreadId adcTaskHandle; 			//!< Variable to control adc task (control measurements of voltage).
+osThreadId temperatureTaskHandle; 	//!< Variable to control temperature task (control measurements of temperature).
+osThreadId usartTaskHandle; 		//!< Variable to control usart task (Rx_Tx via uart).
+uint8_t adc_request; 				//!< Flag to indicate received request to measure voltage.
+uint8_t usart_tx_request;			//!< Flag to indicate end of measurement of voltage or temperature.
+float temperature_tx; 				//!< Last measured temperature.
+float adc_tx; 						//!< Last measured voltage.
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
