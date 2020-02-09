@@ -404,7 +404,7 @@ static void MX_GPIO_Init(void)
 
 /* USER CODE BEGIN Header_StartDefaultTask */
 /**
-  * @brief  Function implementing the defaultTask thread.
+  * @brief  Function implementing the defaultTask thread. It indicates device work by switch led state.
   * @param  argument: Not used 
   * @retval None
   */
@@ -413,13 +413,12 @@ void StartDefaultTask(void const * argument)
 {
   /* USER CODE BEGIN 5 */
   /* Infinite loop */
-  led_state = GPIO_PIN_SET;
+  led_state = GPIO_PIN_SET; // Start value - off
   HAL_GPIO_WritePin(STATUS_INDICATE_PORT, STATUS_INDICATE_PIN, led_state);
   for(;;)
   {
 	Led_Switch();
     osDelay(LED_STATUS_CHECK_DELAY);
-
   }
   /* USER CODE END 5 */ 
 }

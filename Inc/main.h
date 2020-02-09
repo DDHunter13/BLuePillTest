@@ -59,12 +59,12 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN Private defines */
-#define STATUS_INDICATE_PORT GPIOC
-#define STATUS_INDICATE_PIN	GPIO_PIN_13
-#define LED_BLINK_DELAY 100
-#define LED_STATUS_CHECK_DELAY 1000
-#define ADC_SELF_MEASURE 60000
-#define TEMP_SELF_MEASURE 150000
+#define STATUS_INDICATE_PORT GPIOC 			//!< Port of LED
+#define STATUS_INDICATE_PIN	GPIO_PIN_13 	//!< PIN of LED
+#define LED_BLINK_DELAY 100 				//!< Delay between switching state while blinking (ms)
+#define LED_STATUS_CHECK_DELAY 1000 		//!< Led switch delay to indicate device work (ms)
+#define ADC_SELF_MEASURE 60000 				//!< ADC auto measurements delay (ms)
+#define TEMP_SELF_MEASURE 150000			//!< Temperature auto measurements delay (ms)
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
