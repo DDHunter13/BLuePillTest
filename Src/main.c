@@ -417,7 +417,7 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   led_state = GPIO_PIN_SET; // Start value - off
   HAL_GPIO_WritePin(STATUS_INDICATE_PORT, STATUS_INDICATE_PIN, led_state);
-  Led_Blink();
+  usart_tx_request = 4; // indicates to send restart message via uart
 
   // Reload WD timer
   HAL_IWDG_Refresh(&hiwdg);
