@@ -48,14 +48,14 @@
 /* USER CODE END PM */
 
 /* Private variables ---------------------------------------------------------*/
-ADC_HandleTypeDef hadc1; 			//!< Variable to setting and using adc1.
-ADC_HandleTypeDef hadc2; 			//!< Variable to setting and using adc2.
+ADC_HandleTypeDef hadc1;			//!< Variable to setting and using adc1.
+ADC_HandleTypeDef hadc2;			//!< Variable to setting and using adc2.
 
-USART_HandleTypeDef husart1; 		//!< Variable to setting and using usart.
+IWDG_HandleTypeDef hiwdg;			//!< Variable to setting watchdog timer.
 
-WWDG_HandleTypeDef hwwdg; 			//!< Variable to setting watchdog timer.
+USART_HandleTypeDef husart1;		//!< Variable to setting and using usart.
 
-osThreadId defaultTaskHandle; 		//!< Variable to control default task (indicates work).
+osThreadId defaultTaskHandle;		//!< Variable to control default task (indicates work).
 /* USER CODE BEGIN PV */
 osThreadId adcTaskHandle; 			//!< Variable to control adc task (control measurements of voltage).
 osThreadId temperatureTaskHandle; 	//!< Variable to control temperature task (control measurements of temperature).
@@ -71,8 +71,8 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_ADC1_Init(void);
 static void MX_USART1_Init(void);
-static void MX_WWDG_Init(void);
 static void MX_ADC2_Init(void);
+static void MX_IWDG_Init(void);
 void StartDefaultTask(void const * argument);
 
 /* USER CODE BEGIN PFP */
@@ -115,8 +115,8 @@ int main(void)
   MX_GPIO_Init();
   MX_ADC1_Init();
   MX_USART1_Init();
-  //MX_WWDG_Init();
   MX_ADC2_Init();
+  //MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
 
 
@@ -184,9 +184,11 @@ void SystemClock_Config(void)
 
   /** Initializes the CPU, AHB and APB busses clocks 
   */
+//  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI|RCC_OSCILLATORTYPE_LSI;
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
+//  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -304,6 +306,36 @@ static void MX_ADC2_Init(void)
 }
 
 /**
+  * @brief IWDG Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_IWDG_Init(void)
+{
+
+  /* USER CODE BEGIN IWDG_Init 0 */
+
+  /* USER CODE END IWDG_Init 0 */
+
+  /* USER CODE BEGIN IWDG_Init 1 */
+
+  /* USER CODE END IWDG_Init 1 */
+  hiwdg.Instance = IWDG;
+  hiwdg.Init.Prescaler = IWDG_PRESCALER_8;
+  hiwdg.Init.Reload = 4095;
+  if (HAL_IWDG_Init(&hiwdg) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN IWDG_Init 2 */
+
+  // It'll count at least 0.8 sec to restart system.
+
+  /* USER CODE END IWDG_Init 2 */
+
+}
+
+/**
   * @brief USART1 Initialization Function
   * @param None
   * @retval None
@@ -334,36 +366,6 @@ static void MX_USART1_Init(void)
   /* USER CODE BEGIN USART1_Init 2 */
 
   /* USER CODE END USART1_Init 2 */
-
-}
-
-/**
-  * @brief WWDG Initialization Function
-  * @param None
-  * @retval None
-  */
-static void MX_WWDG_Init(void)
-{
-
-  /* USER CODE BEGIN WWDG_Init 0 */
-
-  /* USER CODE END WWDG_Init 0 */
-
-  /* USER CODE BEGIN WWDG_Init 1 */
-
-  /* USER CODE END WWDG_Init 1 */
-  hwwdg.Instance = WWDG;
-  hwwdg.Init.Prescaler = WWDG_PRESCALER_1;
-  hwwdg.Init.Window = 64;
-  hwwdg.Init.Counter = 64;
-  hwwdg.Init.EWIMode = WWDG_EWI_DISABLE;
-  if (HAL_WWDG_Init(&hwwdg) != HAL_OK)
-  {
-    Error_Handler();
-  }
-  /* USER CODE BEGIN WWDG_Init 2 */
-
-  /* USER CODE END WWDG_Init 2 */
 
 }
 
@@ -415,10 +417,16 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   led_state = GPIO_PIN_SET; // Start value - off
   HAL_GPIO_WritePin(STATUS_INDICATE_PORT, STATUS_INDICATE_PIN, led_state);
+
+  // Reload WD timer
+  //HAL_IWDG_Refresh(&hiwdg);
+
   for(;;)
   {
 	Led_Switch();
-    osDelay(LED_STATUS_CHECK_DELAY);
+    osDelay(LED_STATUS_CHECK_DELAY / 2);
+    //HAL_IWDG_Refresh(&hiwdg);
+    osDelay(LED_STATUS_CHECK_DELAY / 2);
   }
   /* USER CODE END 5 */ 
 }
