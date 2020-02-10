@@ -116,7 +116,7 @@ int main(void)
   MX_ADC1_Init();
   MX_USART1_Init();
   MX_ADC2_Init();
-  //MX_IWDG_Init();
+  MX_IWDG_Init();
   /* USER CODE BEGIN 2 */
 
 
@@ -188,7 +188,7 @@ void SystemClock_Config(void)
   RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSI;
   RCC_OscInitStruct.HSIState = RCC_HSI_ON;
   RCC_OscInitStruct.HSICalibrationValue = RCC_HSICALIBRATION_DEFAULT;
-//  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
+  RCC_OscInitStruct.LSIState = RCC_LSI_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_NONE;
   if (HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
@@ -321,7 +321,7 @@ static void MX_IWDG_Init(void)
 
   /* USER CODE END IWDG_Init 1 */
   hiwdg.Instance = IWDG;
-  hiwdg.Init.Prescaler = IWDG_PRESCALER_8;
+  hiwdg.Init.Prescaler = IWDG_PRESCALER_16;
   hiwdg.Init.Reload = 4095;
   if (HAL_IWDG_Init(&hiwdg) != HAL_OK)
   {
@@ -417,15 +417,16 @@ void StartDefaultTask(void const * argument)
   /* Infinite loop */
   led_state = GPIO_PIN_SET; // Start value - off
   HAL_GPIO_WritePin(STATUS_INDICATE_PORT, STATUS_INDICATE_PIN, led_state);
+  Led_Blink();
 
   // Reload WD timer
-  //HAL_IWDG_Refresh(&hiwdg);
+  HAL_IWDG_Refresh(&hiwdg);
 
   for(;;)
   {
 	Led_Switch();
     osDelay(LED_STATUS_CHECK_DELAY / 2);
-    //HAL_IWDG_Refresh(&hiwdg);
+    HAL_IWDG_Refresh(&hiwdg);
     osDelay(LED_STATUS_CHECK_DELAY / 2);
   }
   /* USER CODE END 5 */ 
