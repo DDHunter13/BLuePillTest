@@ -20,15 +20,30 @@ static void Usart_Transmit();
 
 static void Usart_Transmit()
 {
+	// Check, if we have a restart message
+	if(usart_tx_request > 3)
+	{
+		char buffer[9] = {0};
+		sprintf(buffer, "Restart!");
+		HAL_StatusTypeDef state = HAL_USART_Transmit(&husart1, (uint8_t *) buffer, 9, 100);
+		// Check state of operation
+		if(HAL_OK != state)
+		{
+			// close task for restart;
+			Error_Handler();
+		}
+		usart_tx_request -= 4;
+	}
+
 	// Check, if we have a new temperature measurement
 	if(usart_tx_request > 1)
 	{
 		// Combine answer string
-		char buffer[13] = {0};
+		char buffer[11] = {0};
 		float divv = fmod(temperature_tx, (float)1);
 		sprintf(buffer, "temp: %d.%d", (int)temperature_tx, (int)(divv*100));
 		// Send anser via uart
-		HAL_StatusTypeDef state = HAL_USART_Transmit(&husart1, (uint8_t *) buffer, 13, 100);
+		HAL_StatusTypeDef state = HAL_USART_Transmit(&husart1, (uint8_t *) buffer, 11, 100);
 		// Check state of operation
 		if(HAL_OK != state)
 		{
@@ -43,11 +58,11 @@ static void Usart_Transmit()
 	if(usart_tx_request > 0)
 	{
 		// Combine answer string
-		char buffer[13] = {0};
+		char buffer[10] = {0};
 		float divv = fmod(adc_tx, (float)1);
 		sprintf(buffer, "adc: %d.%d", (int)adc_tx, (int)(divv*100));
 		// Send anser via uart
-		HAL_StatusTypeDef state = HAL_USART_Transmit(&husart1, (uint8_t *) buffer, 13, 100);
+		HAL_StatusTypeDef state = HAL_USART_Transmit(&husart1, (uint8_t *) buffer, 10, 100);
 		// Check state of operation
 		if(HAL_OK != state)
 		{
